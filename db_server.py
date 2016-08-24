@@ -21,8 +21,8 @@ if __name__ == "__main__":
     try:
         manager = SALPY_scheduler.SAL_scheduler()
         manager.setDebugLevel(0)
-        manager.salTelemetryPub("scheduler_observationTest")
-        obs = SALPY_scheduler.scheduler_observationTestC()
+        manager.salTelemetryPub("scheduler_observation")
+        obs = SALPY_scheduler.scheduler_observationC()
 
         with sqlite3.connect(args.dbfile) as conn:
             cur = conn.cursor()
@@ -40,7 +40,7 @@ if __name__ == "__main__":
                 obs.ra = row[4]
                 obs.dec = row[5]
                 obs.num_exposures = row[6]
-                manager.putSample_observationTest(obs)
+                manager.putSample_observation(obs)
             cur.close()
 
         manager.salShutdown()

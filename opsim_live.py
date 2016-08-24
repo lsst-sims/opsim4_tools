@@ -23,8 +23,8 @@ def axisSetup(ax):
 
 manager = SALPY_scheduler.SAL_scheduler()
 manager.setDebugLevel(0)
-manager.salTelemetrySub("scheduler_observationTest")
-obs = SALPY_scheduler.scheduler_observationTestC()
+manager.salTelemetrySub("scheduler_observation")
+obs = SALPY_scheduler.scheduler_observationC()
 print("After setting up subscriber")
 
 plt.ion()
@@ -47,7 +47,7 @@ try:
     print("Starting topic loop.")
     field_list = []
     while True:
-        rcode = manager.getNextSample_observationTest(obs)
+        rcode = manager.getNextSample_observation(obs)
         if rcode == 0 and obs.num_exposures != 0 and obs.filter != '':
             plt.cla()
 
