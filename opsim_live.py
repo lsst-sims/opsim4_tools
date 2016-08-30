@@ -1,3 +1,4 @@
+import argparse
 import collections
 import math
 import matplotlib.pyplot as plt
@@ -21,60 +22,81 @@ def axisSetup(ax):
     ax.grid(True)
     #ax.xaxis.set_ticklabels([])
 
-manager = SALPY_scheduler.SAL_scheduler()
-manager.setDebugLevel(0)
-manager.salTelemetrySub("scheduler_observation")
-obs = SALPY_scheduler.scheduler_observationC()
-print("After setting up subscriber")
+def run(opts):
+    manager = SALPY_scheduler.SAL_scheduler()
+    manager.setDebugLevel(0)
+    manager.salTelemetrySub("scheduler_observation")
+    obs = SALPY_scheduler.scheduler_observationC()
+    if opts.verbose > 0:
+        print("After setting up subscriber")
 
-plt.ion()
+    plt.ion()
 
-fig, ax1 = plt.subplots(subplot_kw={"projection": PROJECTION})
-ax1.grid()
+    fig, ax1 = plt.subplots(subplot_kw={"projection": PROJECTION})
+    ax1.grid()
 
-#ax1.grid(True)
-#ax1.xaxis.set_ticklabels([])
+    #ax1.grid(True)
+    #ax1.xaxis.set_ticklabels([])
 
-ax1.get_xaxis().set_visible(False)
-ax1.grid(True)
+    ax1.get_xaxis().set_visible(False)
+    ax1.grid(True)
 
-for i, (band_filter, filter_color) in enumerate(FILTER_DICT.items()):
-    fig.text(0.41 + i * 0.035, 0.15, band_filter, color=filter_color)
+    for i, (band_filter, filter_color) in enumerate(FILTER_DICT.items()):
+        fig.text(0.41 + i * 0.035, 0.15, band_filter, color=filter_color)
 
-fig.show()
+    fig.show()
 
-try:
-    print("Starting topic loop.")
-    field_list = []
-    while True:
-        rcode = manager.getNextSample_observation(obs)
-        if rcode == 0 and obs.num_exposures != 0 and obs.filter != '':
-            plt.cla()
+    try:
+        if opts.verbose > 0:
+            print("Starting topic loop.")
+        field_list = []
+        num_obs = 0
+        while True:
+            rcode = manager.getNextSample_observation(obs)
+            if opts.verbose > 1:
+                print("A: {}, {}, {}".format(rcode, obs.num_exposures, obs.filter))
+            if rcode == 0 and obs.num_exposures != 0 and obs.filter != '':
+                plt.cla()
 
-            ra = np.radians(obs.ra)
-            dec = np.radians(obs.dec)
-            color = FILTER_DICT[obs.filter]
-            zenith_ra = np.radians(obs.observation_start_lst)
-            ra = -(ra - zenith_ra - np.pi) % (np.pi * 2.) - np.pi
+                ra = np.radians(obs.ra)
+                dec = np.radians(obs.dec)
+                color = FILTER_DICT[obs.filter]
+                zenith_ra = np.radians(obs.observation_start_lst)
+                ra = -(ra - zenith_ra - np.pi) % (np.pi * 2.) - np.pi
 
-            ellipse = patches.Ellipse((ra, dec), LSST_FOV / np.cos(dec), LSST_FOV, edgecolor='k',
-                                      facecolor=color)
+                ellipse = patches.Ellipse((ra, dec), LSST_FOV / np.cos(dec), LSST_FOV, edgecolor='k',
+                                          facecolor=color)
 
-            field_list.append(ellipse)
+                field_list.append(ellipse)
 
-            for field in field_list:
-                ax1.add_patch(field)
-            axisSetup(ax1)
-            fig_title = "Night {}, MJD {}".format(obs.night, obs.observation_start_mjd)
-            plt.text(0.5, 1.18, fig_title, horizontalalignment='center', transform=ax1.transAxes)
-            plt.draw()
-            plt.pause(0.00000001)
+                for field in field_list:
+                    ax1.add_patch(field)
+                axisSetup(ax1)
+                fig_title = "Night {}, MJD {}".format(obs.night, obs.observation_start_mjd)
+                plt.text(0.5, 1.18, fig_title, horizontalalignment='center', transform=ax1.transAxes)
+                plt.draw()
+                plt.pause(0.00000001)
 
-            field_list[-1].set_alpha(ALPHA)
-            field_list[-1].set_edgecolor('none')
-            if len(field_list) > NUM_FIELDS:
-                field_list.pop(0)
+                field_list[-1].set_alpha(ALPHA)
+                field_list[-1].set_edgecolor('none')
+                if len(field_list) > NUM_FIELDS:
+                    field_list.pop(0)
+                num_obs += 1
+                if opts.verbose > 1:
+                    print("Observation number {}".format(num_obs))
 
-except KeyboardInterrupt:
-    manager.salShutdown()
-    sys.exit(0)
+    except KeyboardInterrupt:
+        manager.salShutdown()
+        sys.exit(0)
+
+if __name__ == "__main__":
+
+    description = ["Python script to live view a running simulation or a survey database."]
+
+    parser = argparse.ArgumentParser(description=" ".join(description))
+    parser.add_argument("-v", "--verbose", dest="verbose", action='count', default=0,
+                        help="Set the verbosity of the program.")
+    parser.set_defaults()
+    args = parser.parse_args()
+
+    run(args)

@@ -8,7 +8,7 @@ DB_FIELDS = ",".join(["night", "observationStartMJD", "observationStartLST", "fi
 
 if __name__ == "__main__":
 
-    description = ["Python script to serve an OpSim SQLite database like a DDS event stream."]
+    description = ["Python script to serve an OpSim4 SQLite database like a DDS event stream."]
 
     parser = argparse.ArgumentParser(description=" ".join(description))
     parser.add_argument("dbfile", help="The full path to the OpSim SQLite database file.")
@@ -23,6 +23,7 @@ if __name__ == "__main__":
         manager.setDebugLevel(0)
         manager.salTelemetryPub("scheduler_observation")
         obs = SALPY_scheduler.scheduler_observationC()
+        num_obs = 0
 
         with sqlite3.connect(args.dbfile) as conn:
             cur = conn.cursor()
@@ -41,9 +42,11 @@ if __name__ == "__main__":
                 obs.dec = row[5]
                 obs.num_exposures = row[6]
                 manager.putSample_observation(obs)
+                num_obs += 1
             cur.close()
 
         manager.salShutdown()
+        print("Number of observations sent: {}".format(num_obs))
 
     except KeyboardInterrupt:
         manager.salShutdown()
