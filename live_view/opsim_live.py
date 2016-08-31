@@ -45,12 +45,12 @@ def run(opts):
         fig.text(0.41 + i * 0.035, 0.15, band_filter, color=filter_color)
 
     fig.show()
-
+    num_obs = 0
     try:
         if opts.verbose > 0:
             print("Starting topic loop.")
         field_list = []
-        num_obs = 0
+
         while True:
             rcode = manager.getNextSample_observation(obs)
             if opts.verbose > 1:
@@ -75,7 +75,7 @@ def run(opts):
                 fig_title = "Night {}, MJD {}".format(obs.night, obs.observation_start_mjd)
                 plt.text(0.5, 1.18, fig_title, horizontalalignment='center', transform=ax1.transAxes)
                 plt.draw()
-                plt.pause(0.00000001)
+                plt.pause(0.00001)
 
                 field_list[-1].set_alpha(ALPHA)
                 field_list[-1].set_edgecolor('none')
@@ -87,6 +87,8 @@ def run(opts):
 
     except KeyboardInterrupt:
         manager.salShutdown()
+        if opts.verbose > 0:
+            print("Total observations received: {}".format(num_obs))
         sys.exit(0)
 
 if __name__ == "__main__":
