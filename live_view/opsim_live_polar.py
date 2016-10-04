@@ -65,10 +65,8 @@ def run(opts):
                 #alt = np.sin(math.radians(obs.dec))
                 alt = 1.0 - math.radians(obs.altitude) / PI_OVER_2
                 color = FILTER_DICT[obs.filter]
-                # ellipse = patches.Ellipse((ra, dec), LSST_FOV / np.cos(dec), LSST_FOV, edgecolor='k',
-                #                           facecolor=color)
-
-                ellipse = patches.Circle((az, alt), radius=LSST_FOV_RADIUS, edgecolor='k', facecolor=color)
+                ellipse = patches.Ellipse((az, alt), LSST_FOV / alt, LSST_FOV, edgecolor='k',
+                                          facecolor=color)
 
                 field_list.append(ellipse)
 
