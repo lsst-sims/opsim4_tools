@@ -1,10 +1,15 @@
 import argparse
+import math
 import SALPY_scheduler
 import sqlite3
 import sys
+import time
 
-DB_FIELDS = ",".join(["night", "observationStartMJD", "observationStartLST", "filter", "ra", "dec",
-                      "numExposures"])
+SQL_4 = "select night, observationStartMJD, observationStartLST, filter, ra, dec, altitude, azimuth, "\
+        "numExposures from ObsHistory"
+
+SQL_3 = "select night, expMJD, lst, filter, Field.fieldRA, Field.fieldDec, altitude, azimuth "\
+        "from ObsHistory, Field where ObsHistory.Field_fieldID = Field.fieldID"
 
 if __name__ == "__main__":
 
@@ -13,6 +18,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=" ".join(description))
     parser.add_argument("dbfile", help="The full path to the OpSim SQLite database file.")
     parser.add_argument("-l", "--limit", default=0, help="Look at the first N fields.")
+    parser.add_argument("-3", dest="v3", action="store_true", default=False, help="Query an OpSim v3 DB.")
     parser.set_defaults()
     args = parser.parse_args()
 
@@ -27,7 +33,10 @@ if __name__ == "__main__":
 
         with sqlite3.connect(args.dbfile) as conn:
             cur = conn.cursor()
-            query = "select {} from ObsHistory".format(DB_FIELDS)
+            if args.v3:
+                query = SQL_3
+            else:
+                query = SQL_4
             if use_limit:
                 query += " limit {}".format(args.limit)
             query += ";"
@@ -36,13 +45,23 @@ if __name__ == "__main__":
             for row in cur:
                 obs.night = row[0]
                 obs.observation_start_mjd = row[1]
-                obs.observation_start_lst = row[2]
                 obs.filter = str(row[3])
                 obs.ra = row[4]
                 obs.dec = row[5]
-                obs.num_exposures = row[6]
+                if not args.v3:
+                    obs.observation_start_lst = row[2]
+                    obs.altitude = row[6]
+                    obs.azimuth = row[7]
+                    obs.num_exposures = row[8]
+                else:
+                    obs.observation_start_lst = math.degrees(row[2])
+                    obs.altitude = math.degrees(row[6])
+                    obs.azimuth = math.degrees(row[7])
+                    obs.num_exposures = 2
+
                 manager.putSample_observation(obs)
                 num_obs += 1
+                time.sleep(0.1)
             cur.close()
 
         manager.salShutdown()
