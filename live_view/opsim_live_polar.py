@@ -12,11 +12,13 @@ NUM_FIELDS = 10
 
 LSST_FOV_RADIUS = math.radians(1.75)
 LSST_FOV = LSST_FOV_RADIUS * 2.0
+MOON_DIA = math.radians(0.5 * 6.0)
 
 ALPHA = 0.4
 FILTER_DICT = collections.OrderedDict([('u', [0, 0, 1, 1]), ('g', [0, 1, 1, 1]),
                                        ('r', [0, 1, 0, 1]), ('i', [1, .5, 0, 1]),
                                        ('z', [1, 0, 0, 1]), ('y', [1, 0, 1, 1])])
+MOON_ALPHA = 0.15
 
 PI_OVER_2 = np.pi / 2.0
 
@@ -64,9 +66,20 @@ def run(opts):
 
                 for field in field_list:
                     ax1.add_patch(field)
+
+                if obs.moon_alt > 0:
+                    moon_az = np.radians(obs.moon_az)
+                    moon_alt = 1.0 - math.radians(obs.moon_alt) / PI_OVER_2
+                    alpha = np.max([obs.moon_phase / 100., MOON_ALPHA])
+                    moon = patches.Ellipse((moon_az, moon_alt), MOON_DIA / moon_alt, MOON_DIA,
+                                           color='k', alpha=alpha)
+                    ax1.add_patch(moon)
+
                 axisSetup(ax1)
                 fig_title = "Night {}, MJD {}".format(obs.night, obs.observation_start_mjd)
                 plt.text(-0.3, 1.0, fig_title, transform=ax1.transAxes)
+                moon_phase_text = "Moon Phase: {:.1f}%".format(obs.moon_phase)
+                plt.text(0.9, 1.0, moon_phase_text, transform=ax1.transAxes)
                 plt.draw()
                 plt.pause(0.0001)
 
