@@ -6,10 +6,10 @@ import sys
 import time
 
 SQL_4 = "select night, observationStartMJD, observationStartLST, filter, ra, dec, altitude, azimuth, "\
-        "numExposures from ObsHistory"
+        "numExposures, moonAlt, moonAz, moonPhase from ObsHistory"
 
-SQL_3 = "select night, expMJD, lst, filter, Field.fieldRA, Field.fieldDec, altitude, azimuth "\
-        "from ObsHistory, Field where ObsHistory.Field_fieldID = Field.fieldID"
+SQL_3 = "select night, expMJD, lst, filter, Field.fieldRA, Field.fieldDec, altitude, azimuth, "\
+        "moonAlt, moonAZ, moonPhase from ObsHistory, Field where ObsHistory.Field_fieldID = Field.fieldID"
 
 if __name__ == "__main__":
 
@@ -19,6 +19,8 @@ if __name__ == "__main__":
     parser.add_argument("dbfile", help="The full path to the OpSim SQLite database file.")
     parser.add_argument("-l", "--limit", default=0, help="Look at the first N fields.")
     parser.add_argument("-3", dest="v3", action="store_true", default=False, help="Query an OpSim v3 DB.")
+    parser.add_argument("-n", "--night", nargs="*", default=[], type=int,
+                        help="Set the night or night range (min, max) to view.")
     parser.set_defaults()
     args = parser.parse_args()
 
@@ -37,6 +39,16 @@ if __name__ == "__main__":
                 query = SQL_3
             else:
                 query = SQL_4
+
+            if len(args.night):
+                try:
+                    min_night = args.night[0]
+                    max_night = args.night[1]
+                    query += " where (night>={} and night<={})".format(min_night, max_night)
+                except IndexError:
+                    night = args.night[0]
+                    query += " where night={}".format(night)
+
             if use_limit:
                 query += " limit {}".format(args.limit)
             query += ";"
@@ -53,11 +65,17 @@ if __name__ == "__main__":
                     obs.altitude = row[6]
                     obs.azimuth = row[7]
                     obs.num_exposures = row[8]
+                    obs.moon_alt = row[9]
+                    obs.moon_az = row[10]
+                    obs.moon_phase = row[11]
                 else:
                     obs.observation_start_lst = math.degrees(row[2])
                     obs.altitude = math.degrees(row[6])
                     obs.azimuth = math.degrees(row[7])
                     obs.num_exposures = 2
+                    obs.moon_alt = math.degrees(row[8])
+                    obs.moon_az = math.degrees(row[9])
+                    obs.moon_phase = row[10]
 
                 manager.putSample_observation(obs)
                 num_obs += 1
