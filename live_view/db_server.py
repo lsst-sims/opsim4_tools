@@ -9,8 +9,9 @@ SQL_4 = "select night, observationStartMJD, observationStartLST, filter, ra, dec
         "numExposures, moonAlt, moonAz, moonPhase, sunAlt from ObsHistory"
 
 SQL_3 = "select night, expMJD, lst, filter, Field.fieldRA, Field.fieldDec, altitude, azimuth, "\
-        "moonAlt, moonAZ, moonPhase, sunAZ from ObsHistory, Field "\
-        "where ObsHistory.Field_fieldID = Field.fieldID"
+        "moonAlt, moonAZ, moonPhase, sunAlt from ObsHistory, Field"
+
+SQL_3_WHERE = " where ObsHistory.Field_fieldID = Field.fieldID"
 
 if __name__ == "__main__":
 
@@ -41,14 +42,23 @@ if __name__ == "__main__":
             else:
                 query = SQL_4
 
+            night_query = None
             if len(args.night):
                 try:
                     min_night = args.night[0]
                     max_night = args.night[1]
-                    query += " where (night>={} and night<={})".format(min_night, max_night)
+                    night_query = " (night>={} and night<={})".format(min_night, max_night)
                 except IndexError:
                     night = args.night[0]
-                    query += " where night={}".format(night)
+                    night_query = " night={}".format(night)
+            if night_query is not None:
+                if args.v3:
+                    query += SQL_3_WHERE + " and" + night_query
+                else:
+                    query += " where" + night_query
+            else:
+                if args.v3:
+                    query += SQL_3_WHERE
 
             if use_limit:
                 query += " limit {}".format(args.limit)
