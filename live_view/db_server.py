@@ -6,10 +6,11 @@ import sys
 import time
 
 SQL_4 = "select night, observationStartMJD, observationStartLST, filter, ra, dec, altitude, azimuth, "\
-        "numExposures, moonAlt, moonAz, moonPhase from ObsHistory"
+        "numExposures, moonAlt, moonAz, moonPhase, sunAlt from ObsHistory"
 
 SQL_3 = "select night, expMJD, lst, filter, Field.fieldRA, Field.fieldDec, altitude, azimuth, "\
-        "moonAlt, moonAZ, moonPhase from ObsHistory, Field where ObsHistory.Field_fieldID = Field.fieldID"
+        "moonAlt, moonAZ, moonPhase, sunAZ from ObsHistory, Field "\
+        "where ObsHistory.Field_fieldID = Field.fieldID"
 
 if __name__ == "__main__":
 
@@ -68,6 +69,7 @@ if __name__ == "__main__":
                     obs.moon_alt = row[9]
                     obs.moon_az = row[10]
                     obs.moon_phase = row[11]
+                    obs.sun_alt = row[12]
                 else:
                     obs.observation_start_lst = math.degrees(row[2])
                     obs.altitude = math.degrees(row[6])
@@ -76,6 +78,7 @@ if __name__ == "__main__":
                     obs.moon_alt = math.degrees(row[8])
                     obs.moon_az = math.degrees(row[9])
                     obs.moon_phase = row[10]
+                    obs.sun_alt = math.degrees(row[11])
 
                 manager.putSample_observation(obs)
                 num_obs += 1

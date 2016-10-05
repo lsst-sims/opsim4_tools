@@ -20,6 +20,8 @@ FILTER_DICT = collections.OrderedDict([('u', [0, 0, 1, 1]), ('g', [0, 1, 1, 1]),
                                        ('z', [1, 0, 0, 1]), ('y', [1, 0, 1, 1])])
 MOON_ALPHA = 0.15
 
+ASTRO_TWILIGHT = -18.0
+
 PI_OVER_2 = np.pi / 2.0
 
 def axisSetup(ax):
@@ -80,6 +82,11 @@ def run(opts):
                 plt.text(-0.3, 1.0, fig_title, transform=ax1.transAxes)
                 moon_phase_text = "Moon Phase: {:.1f}%".format(obs.moon_phase)
                 plt.text(0.9, 1.0, moon_phase_text, transform=ax1.transAxes)
+                if obs.sun_alt <= ASTRO_TWILIGHT:
+                    tom_text = "Night"
+                else:
+                    tom_text = "Twilight"
+                plt.text(0.9, 0.0, tom_text, transform=ax1.transAxes)
                 plt.draw()
                 plt.pause(0.0001)
 
