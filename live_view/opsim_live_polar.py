@@ -26,6 +26,7 @@ PI_OVER_2 = np.pi / 2.0
 
 def axisSetup(ax):
     ax.set_rgrids([0.3333, 0.66666, 1.0], [u"60\u00b0", u"30\u00b0", u"0\u00b0"])
+    ax.set_theta_zero_location("N")
     ax.grid(True)
 
 def run(opts):
