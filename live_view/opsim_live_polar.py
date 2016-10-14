@@ -12,7 +12,8 @@ NUM_FIELDS = 10
 
 LSST_FOV_RADIUS = math.radians(1.75)
 LSST_FOV = LSST_FOV_RADIUS * 2.0
-MOON_DIA = math.radians(0.5 * 6.0)
+MOON_SCALE = 6.0
+MOON_DIA = math.radians(0.5 * MOON_SCALE)
 
 ALPHA = 0.4
 FILTER_DICT = collections.OrderedDict([('u', [0, 0, 1, 1]), ('g', [0, 1, 1, 1]),
@@ -70,7 +71,7 @@ def run(opts):
                 for field in field_list:
                     ax1.add_patch(field)
 
-                if obs.moon_alt > 0:
+                if obs.moon_alt > -0.25 * MOON_SCALE:
                     moon_az = np.radians(obs.moon_az)
                     moon_alt = 1.0 - math.radians(obs.moon_alt) / PI_OVER_2
                     alpha = np.max([obs.moon_phase / 100., MOON_ALPHA])
