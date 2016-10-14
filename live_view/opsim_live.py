@@ -95,7 +95,7 @@ def run(opts):
 
                 field_list[-1].set_alpha(ALPHA)
                 field_list[-1].set_edgecolor('none')
-                if len(field_list) > NUM_FIELDS:
+                if len(field_list) > opts.trail:
                     field_list.pop(0)
                 num_obs += 1
                 if opts.verbose > 1:
@@ -114,6 +114,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=" ".join(description))
     parser.add_argument("-v", "--verbose", dest="verbose", action='count', default=0,
                         help="Set the verbosity of the program.")
+    parser.add_argument("-t", "--trail", dest="trail", default=10, type=int,
+                        help="Set the number of fields to keep.")
     parser.set_defaults()
     args = parser.parse_args()
 
