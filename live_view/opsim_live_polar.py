@@ -1,9 +1,11 @@
+from __future__ import division
 import argparse
 import collections
 import math
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import numpy as np
+import os
 import SALPY_scheduler
 import sys
 
@@ -15,20 +17,30 @@ LSST_FOV = LSST_FOV_RADIUS * 2.0
 MOON_SCALE = 6.0
 MOON_DIA = math.radians(0.5 * MOON_SCALE)
 
-ALPHA = 0.4
-FILTER_DICT = collections.OrderedDict([('u', [0, 0, 1, 1]), ('g', [0, 1, 1, 1]),
-                                       ('r', [0, 1, 0, 1]), ('i', [1, .5, 0, 1]),
+ALPHA = 0.5
+FILTER_DICT = collections.OrderedDict([('u', [0, 1, 1, 1]), ('g', [0, 1, 0, 1]),
+                                       ('r', [1, 1, 0, 1]), ('i', [1, .5, 0, 1]),
                                        ('z', [1, 0, 0, 1]), ('y', [1, 0, 1, 1])])
-MOON_ALPHA = 0.15
+MOON_ALPHA = 0.05
 
 ASTRO_TWILIGHT = -18.0
 
 PI_OVER_2 = np.pi / 2.0
 
-def axisSetup(ax):
-    ax.set_rgrids([0.3333, 0.66666, 1.0], [u"60\u00b0", u"30\u00b0", u"0\u00b0"])
+TWILIGHT_COLOR = (0.35, 0, 1)
+
+def normalize_color(color):
+    if color > 1:
+        return 1
+    if color < 0:
+        return 0
+    return color
+
+def axisSetup(ax, bgcolor=TWILIGHT_COLOR):
+    ax.set_axis_bgcolor(bgcolor)
+    ax.set_rgrids([0.3333, 0.66666], [u"60\u00b0", u"30\u00b0"], color='w')
     ax.set_theta_zero_location("N")
-    ax.grid(True)
+    ax.grid(True, color='w', linewidth=2)
 
 def run(opts):
     manager = SALPY_scheduler.SAL_scheduler()
@@ -76,20 +88,29 @@ def run(opts):
                     moon_alt = 1.0 - math.radians(obs.moon_alt) / PI_OVER_2
                     alpha = np.max([obs.moon_phase / 100., MOON_ALPHA])
                     moon = patches.Ellipse((moon_az, moon_alt), MOON_DIA / moon_alt, MOON_DIA,
-                                           color='k', alpha=alpha)
+                                           color='w', alpha=alpha)
                     ax1.add_patch(moon)
 
-                axisSetup(ax1)
+                if obs.sun_alt <= ASTRO_TWILIGHT:
+                    tom_text = "Night"
+                    background_color = (0, 0, 0)
+                else:
+                    tom_text = "Twilight"
+                    blue_color = normalize_color((1 / 6) * obs.sun_alt + 3)
+                    red_color = normalize_color((35 / 600) * obs.sun_alt + 105 / 100)
+                    background_color = (red_color, 0, blue_color)
+                axisSetup(ax1, background_color)
                 fig_title = "Night {}, MJD {}".format(obs.night, obs.observation_start_mjd)
                 plt.text(-0.3, 1.0, fig_title, transform=ax1.transAxes)
                 moon_phase_text = "Moon Phase: {:.1f}%".format(obs.moon_phase)
                 plt.text(0.9, 1.0, moon_phase_text, transform=ax1.transAxes)
-                if obs.sun_alt <= ASTRO_TWILIGHT:
-                    tom_text = "Night"
-                else:
-                    tom_text = "Twilight"
+
                 plt.text(0.9, 0.0, tom_text, transform=ax1.transAxes)
                 plt.draw()
+                if opts.save is not None:
+                    filename = "mjd_{:12.0f}.png".format(obs.observation_start_mjd * 1e13)
+                    filepath = os.path.join(opts.save, filename)
+                    plt.savefig(filepath)
                 plt.pause(0.0001)
 
                 field_list[-1].set_alpha(ALPHA)
@@ -115,6 +136,7 @@ if __name__ == "__main__":
                         help="Set the verbosity of the program.")
     parser.add_argument("-t", "--trail", dest="trail", default=10, type=int,
                         help="Set the number of fields to keep.")
+    parser.add_argument("-s", "--save", dest="save", default=None)
     parser.set_defaults()
     args = parser.parse_args()
 
