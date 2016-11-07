@@ -22,7 +22,7 @@ def find_filter_changes(dbname, col, nr, fc, mtfc):
             try:
                 mtfc[night] = numpy.min(diff_mjd) * MINUTES_IN_DAY
             except ValueError:
-                # No
+                # No filter changes
                 mjd = run[col].values
                 try:
                     mtfc[night] = (mjd[-1] - mjd[0]) * MINUTES_IN_DAY
@@ -40,6 +40,8 @@ if __name__ == "__main__":
                         help="Specify the number of processors to use.")
     parser.add_argument("-n", dest="nights", default=3650, type=int,
                         help="Specify the number of nights to process.")
+    parser.add_argument("-i", dest="interactive", action="store_true", default=False,
+                        help="Show the finished plot.")
     parser.set_defaults()
     args = parser.parse_args()
 
@@ -70,11 +72,10 @@ if __name__ == "__main__":
         j.join()
 
     print("Processing complete.")
-    #print(filter_changes_dict)
+
     filter_changes = numpy.array(filter_changes_dict.values())
     min_time_btw_filter_changes = numpy.array(min_time_btw_filter_changes_dict.values())
     night_array = numpy.array(filter_changes_dict.keys())
-    #print(night_array)
 
     fig = plt.figure(figsize=(12, 8))
     fig.suptitle("Filter Change Quantities")
@@ -105,7 +106,7 @@ if __name__ == "__main__":
     head_name = "_".join(args.dbfile.split('.')[0].split('_')[:2])
     fig_name = "{}_filter_changes.png".format(head_name)
 
-    plt.show()
-    #plt.savefig(fig_name)
-    #print("Number of filter changes:", len(mjd))
-    #print("Min time between filter changes: {:.3f}".format(numpy.min(diff_mjd) * 24 * 3600))
+    plt.subplots_adjust(left=0.07, right=0.95, top=0.93, bottom=0.1, hspace=0.25, wspace=0.45)
+    if args.interactive:
+        plt.show()
+    plt.savefig(fig_name)
