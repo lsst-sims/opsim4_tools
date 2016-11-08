@@ -2,3 +2,5 @@
 *.db
 *.dat
 *.pyc
+*.png
+*.npz
