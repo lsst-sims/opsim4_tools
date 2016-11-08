@@ -5,6 +5,7 @@ import multiprocessing
 import numpy
 import pandas as pd
 from sqlalchemy import create_engine
+import os
 
 MINUTES_IN_DAY = 24 * 60
 
@@ -103,8 +104,8 @@ if __name__ == "__main__":
     ax5.set_xlabel("Number of Filter Changes")
     ax5.set_ylabel("Min Time Btw Filter Changes (min)")
 
-    head_name = "_".join(args.dbfile.split('.')[0].split('_')[:2])
-    fig_name = "{}_filter_changes.png".format(head_name)
+    file_head = os.path.basename(args.dbfile).split('.')[0]
+    fig_name = "{}_filter_changes.png".format(file_head)
 
     plt.subplots_adjust(left=0.07, right=0.95, top=0.93, bottom=0.1, hspace=0.25, wspace=0.45)
     if args.interactive:
