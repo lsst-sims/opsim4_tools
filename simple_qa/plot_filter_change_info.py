@@ -43,6 +43,8 @@ if __name__ == "__main__":
                         help="Specify the number of nights to process.")
     parser.add_argument("-i", dest="interactive", action="store_true", default=False,
                         help="Show the finished plot.")
+    parser.add_argument("-l", dest="log", action="store_true", default=False,
+                        help="Set log scale on y axis for histogram plots.")
     parser.set_defaults()
     args = parser.parse_args()
 
@@ -84,19 +86,23 @@ if __name__ == "__main__":
     ax1 = fig.add_subplot(2, 3, 1)
     ax1.plot(night_array, filter_changes)
     ax1.set_xlabel("Night")
+    ax1.set_xlim(night_array[0], night_array[-1])
+    ax1.set_xticks(numpy.arange(0, night_array[-1], 1000))
     ax1.set_ylabel("Number of Filter Changes")
 
     ax2 = fig.add_subplot(2, 3, 2)
-    ax2.hist(filter_changes, bins=50)
+    ax2.hist(filter_changes, bins=numpy.max(filter_changes))
     ax2.set_xlabel("Number of Filter Changes")
 
     ax3 = fig.add_subplot(2, 3, 3)
     ax3.plot(night_array, min_time_btw_filter_changes)
     ax3.set_xlabel("Night")
+    ax3.set_xlim(night_array[0], night_array[-1])
+    ax3.set_xticks(numpy.arange(0, night_array[-1], 1000))
     ax3.set_ylabel("Min Time Btw Filter Changes (min)")
 
     ax4 = fig.add_subplot(2, 3, 4)
-    ax4.hist(min_time_btw_filter_changes, bins=100)
+    ax4.hist(min_time_btw_filter_changes, bins=100, log=args.log)
     ax4.set_xlabel("Min Time Btw Filter Changes (min)")
 
     ax5 = fig.add_subplot(2, 3, 5)
@@ -107,7 +113,7 @@ if __name__ == "__main__":
     file_head = os.path.basename(args.dbfile).split('.')[0]
     fig_name = "{}_filter_changes.png".format(file_head)
 
-    plt.subplots_adjust(left=0.07, right=0.95, top=0.93, bottom=0.1, hspace=0.25, wspace=0.45)
+    plt.subplots_adjust(left=0.07, right=0.95, top=0.93, bottom=0.1, hspace=0.2, wspace=0.45)
     if args.interactive:
         plt.show()
     plt.savefig(fig_name)
