@@ -33,6 +33,6 @@ if __name__ == '__main__':
     plt.xlim(0, deltas.size)
     plt.ylim(0, numpy.max(deltas) * 1.15)
     plt.ylabel("$\Delta T_{N}$ (seconds)")
+    plt.savefig(file_head + "_runtime_per_night.png")
     if args.interactive:
         plt.show()
-    plt.savefig(file_head + ".png")

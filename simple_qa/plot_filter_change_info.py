@@ -114,6 +114,6 @@ if __name__ == "__main__":
     fig_name = "{}_filter_changes.png".format(file_head)
 
     plt.subplots_adjust(left=0.07, right=0.95, top=0.93, bottom=0.1, hspace=0.2, wspace=0.45)
+    plt.savefig(fig_name)
     if args.interactive:
         plt.show()
-    plt.savefig(fig_name)

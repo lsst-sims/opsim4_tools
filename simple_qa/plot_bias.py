@@ -1,7 +1,9 @@
+import argparse
 import matplotlib.pyplot as plt
 import numpy
 import pandas as pd
 from sqlalchemy import create_engine
+import os
 import sys
 
 def get_data_frame(dbpath):
@@ -13,11 +15,15 @@ def get_data_frame(dbpath):
     return data
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print("Usage python plot_bias.py <run db>")
-        sys.exit(255)
+    description = ["Python script to plot runtime per night and print statistics."]
+    parser = argparse.ArgumentParser(description=" ".join(description))
+    parser.add_argument("dbfile", help="The full path to the OpSim SQLite database file.")
+    parser.add_argument("-i", dest="interactive", action="store_true", default=False,
+                        help="Show the finished plot.")
+    parser.set_defaults()
+    args = parser.parse_args()
 
-    run = get_data_frame(sys.argv[1])
+    run = get_data_frame(args.dbfile)
 
     hour_angle = run['hourAngle'].values
     hour_angle = numpy.where(hour_angle < -180.0, hour_angle + 360.0, hour_angle)
@@ -40,4 +46,8 @@ if __name__ == "__main__":
     ax2.set_xlabel("Azimuth (degrees)")
     ax2.set_ylabel("Altitude (degrees)")
 
-    plt.show()
+    file_head = os.path.basename(args.dbfile).split('.')[0]
+    plt.savefig(file_head + "_observing_bias.png")
+
+    if args.interactive:
+        plt.show()
