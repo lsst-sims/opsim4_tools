@@ -16,7 +16,6 @@ def get_scp(fd, fs):
 def get_gp(fd, fs):
     query = fs.galactic_region(10.0, 0.0, 90.0)
     query = fs.combine_queries((), query)
-    print(query)
     ra, dec = fd.get_ra_dec_arrays(query)
     return ("GalacticPlane", ra, dec)
 
