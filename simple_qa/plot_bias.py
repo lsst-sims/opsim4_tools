@@ -4,12 +4,16 @@ import numpy
 import pandas as pd
 from sqlalchemy import create_engine
 import os
-import sys
 
-def get_data_frame(dbpath):
+def get_data_frame(dbpath, use_opsim3):
     engine = create_engine("sqlite:///{}".format(dbpath))
-    select_sql = "select observationStartMJD, (observationStartLST - ra) as hourAngle, altitude, azimuth "\
-                 "from ObsHistory;"
+    if not use_opsim3:
+        select_sql = "select observationStartMJD, (observationStartLST - ra) as hourAngle, altitude, "\
+                     "azimuth from ObsHistory;"
+    else:
+        select_sql = "select expMJD, lst, fieldRA, altitude, azimuth from Field, ObsHistory "\
+                     "where ObsHistory.Field_fieldId = Field.fieldId;"
+
     with engine.connect() as conn, conn.begin():
         data = pd.read_sql_query(select_sql, conn)
     return data
@@ -20,18 +24,25 @@ if __name__ == "__main__":
     parser.add_argument("dbfile", help="The full path to the OpSim SQLite database file.")
     parser.add_argument("-i", dest="interactive", action="store_true", default=False,
                         help="Show the finished plot.")
+    parser.add_argument("-3", dest="v3", action="store_true", default=False,
+                        help="Query an OpSim v3 DB.")
     parser.set_defaults()
     args = parser.parse_args()
 
-    run = get_data_frame(args.dbfile)
+    run = get_data_frame(args.dbfile, args.v3)
 
-    hour_angle = run['hourAngle'].values
+    if not args.v3:
+        hour_angle = run['hourAngle'].values
+        azimuth = run['azimuth'].values
+        altitude = run['altitude'].values
+    else:
+        hour_angle = numpy.degrees(run['lst'].values) - run['fieldRA'].values
+        azimuth = numpy.degrees(run['azimuth'].values)
+        altitude = numpy.degrees(run['altitude'].values)
+
     hour_angle = numpy.where(hour_angle < -180.0, hour_angle + 360.0, hour_angle)
     hour_angle = numpy.where(hour_angle > 180.0, hour_angle - 360.0, hour_angle)
     hour_angle /= 15.0
-
-    azimuth = run['azimuth'].values
-    altitude = run['altitude'].values
 
     fig = plt.figure(figsize=(12, 5))
     fig.suptitle("Observing Bias")
