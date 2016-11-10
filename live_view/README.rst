@@ -11,7 +11,7 @@ The scripts require the Scheduler SAL topic library. Setup instructions for this
 Scripts
 -------
 
-``opsims_live_polar.py``: This script shows the telescope view (altitude, azimuth) of the observations. Its inspiriation is drawn from the Telescope and Site simulator by Dave Mills. The filter used for the observation is color coded. If the moon is up, it will show on the display. It has been enlarged 6x for visibility and the color code for the phase is black (full) to light gray (new). The new moon end of the color code is capped when the phase drops below 15%. The canvas displays the night and MJD information of the current observation. Also, the moon's phase and an indicator of twilight/night is displayed. The viewer keeps a 10 obeservation list showing the recent history of observations. 
+``opsims_live_polar.py``: This script shows the telescope view (altitude, azimuth) of the observations. Its inspiriation is drawn from the Telescope and Site simulator by Dave Mills. The background is black for night and fading/rising blue for twilight. The filter used for the observation is color coded. If the moon is up, it will show on the display. It has been enlarged 6x for visibility and the color code for the phase is white (full) to light gray (new). The new moon end of the color code is capped when the phase drops below 5%. The canvas displays the night and MJD information of the current observation. Also, the moon's phase and an indicator of twilight/night is displayed. The viewer keeps a 10 obeservation list showing the recent history of observations. 
 
 ``opsim_live.py``: This script is a sky view (right ascension, declination) of the observations. The rest of the functionality is the same as ``opsim_live_polar.py``. 
 
