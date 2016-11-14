@@ -21,18 +21,36 @@ if __name__ == '__main__':
     print("Mean: %.2f seconds" % numpy.mean(deltas))
     print("Median: %.2f seconds" % numpy.median(deltas))
     print("Standard Deviation: %.2f seconds" % numpy.std(deltas, ddof=1))
-    print("Variance: %.2f seconds" % numpy.var(deltas, ddof=1))
     print("Minimum: %.2f seconds" % numpy.amin(deltas))
     print("Maximum: %.2f seconds" % numpy.amax(deltas))
     print("Survey Time: %.2f hours" % survey_time)
 
     x = numpy.arange(deltas.size) + 1
-    plt.plot(x, deltas)
-    plt.title("Processing Time for Each Night")
-    plt.xlabel("Night of Survey")
-    plt.xlim(0, deltas.size)
-    plt.ylim(0, numpy.max(deltas) * 1.15)
-    plt.ylabel("$\Delta T_{N}$ (seconds)")
+
+    fig = plt.figure(figsize=(12, 5))
+
+    ax1 = fig.add_subplot(1, 2, 1)
+    ax1.plot(x, deltas)
+    ax1.set_title("Processing Time for Each Night")
+    ax1.set_xlabel("Night of Survey")
+    ax1.set_xlim(0, deltas.size)
+    ax1.set_ylim(0, numpy.max(deltas) * 1.15)
+    ax1.set_ylabel("$\Delta T_{N}$ (seconds)")
+
+    ax2 = fig.add_subplot(1, 2, 2)
+    font_size = 15
+    ax2.text(0.2, 0.75, "Number of Nights: {}".format(deltas.size), fontsize=font_size)
+    ax2.text(0.2, 0.65, "Survey Time: {:.2f} hours".format(survey_time), fontsize=font_size)
+    ax2.text(0.2, 0.55, "Mean: {:.2f} seconds".format(numpy.mean(deltas)), fontsize=font_size)
+    ax2.text(0.2, 0.45, "Median: {:.2f} seconds".format(numpy.median(deltas)), fontsize=font_size)
+    ax2.text(0.2, 0.35, "Standard Deviation: {:.2f} seconds".format(numpy.std(deltas, ddof=1)),
+             fontsize=font_size)
+    ax2.text(0.2, 0.25, "Minimum: {:.2f} seconds".format(numpy.amin(deltas)), fontsize=font_size)
+    ax2.text(0.2, 0.15, "Maximum: {:.2f} seconds".format(numpy.amax(deltas)), fontsize=font_size)
+    ax2.set_title("Statistics")
+    plt.setp(plt.gca(), frame_on=False, xticks=(), yticks=())
+
+    plt.subplots_adjust(left=0.08, right=1.00, wspace=0.0)
     plt.savefig(file_head + "_runtime_per_night.png")
     if args.interactive:
         plt.show()
