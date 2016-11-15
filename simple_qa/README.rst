@@ -6,6 +6,8 @@ This directory contains scripts made for doing simple quality assurance on *OpSi
 Requirements
 ------------
 
+``check_runs.py``: pandas, sqlalchemy
+
 ``check_skybrightness.py``: SOCS (*sims_ocs*), Scheduler (*ts_scheduler*), SkyModel (*sky_brightness*), *sims_utils*, *numpy* and all of their dependencies
 
 ``find_bad_row.py``: *numpy*
@@ -20,6 +22,8 @@ Requirements
 
 Scripts
 -------
+
+``check_runs.py``: This script checks the ordering of the Field_fieldId and filter columns from the TargetHistory table between two OpSim SQLite databases.
 
 ``check_skybrightness.py``: This script takes an *OpSim4* results database and compares the sky brightness found in the target history against the sky brightness calculated by the SkyModel class at the same MJD.
 
