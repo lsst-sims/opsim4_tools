@@ -26,6 +26,8 @@ if __name__ == "__main__":
                         help="Show the finished plot.")
     parser.add_argument("-3", dest="v3", action="store_true", default=False,
                         help="Query an OpSim v3 DB.")
+    parser.add_argument("-l", dest="log", action="store_true", default=False,
+                        help="Set log scale on hour angle distribution plot.")
     parser.set_defaults()
     args = parser.parse_args()
 
@@ -48,7 +50,7 @@ if __name__ == "__main__":
     fig.suptitle("Observing Bias")
 
     ax1 = fig.add_subplot(1, 2, 1)
-    ax1.hist(hour_angle, bins=100, log=True)
+    ax1.hist(hour_angle, bins=100, log=args.log)
     ax1.set_xlabel("Hour Angle (hours)")
     ax1.axvline(color='red', linewidth=2, linestyle='--')
 
@@ -58,7 +60,10 @@ if __name__ == "__main__":
     ax2.set_ylabel("Altitude (degrees)")
 
     file_head = os.path.basename(args.dbfile).split('.')[0]
-    plt.savefig(file_head + "_observing_bias.png")
+    middle_tag = "_observing_bias"
+    if args.log:
+        middle_tag += "_logscale"
+    plt.savefig(file_head + middle_tag + ".png")
 
     if args.interactive:
         plt.show()
