@@ -55,9 +55,10 @@ if __name__ == "__main__":
     ax1.axvline(color='red', linewidth=2, linestyle='--')
 
     ax2 = fig.add_subplot(1, 2, 2)
-    ax2.hist2d(azimuth, altitude, bins=40)
+    h2 = ax2.hist2d(azimuth, altitude, bins=40)
     ax2.set_xlabel("Azimuth (degrees)")
     ax2.set_ylabel("Altitude (degrees)")
+    plt.colorbar(h2[3], ax=ax2)
 
     file_head = os.path.basename(args.dbfile).split('.')[0]
     middle_tag = "_observing_bias"
