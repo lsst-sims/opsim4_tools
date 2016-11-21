@@ -18,6 +18,8 @@ Requirements
 
 ``plot_filter_change_info.py``: *matplotlib*, *multiprocessing*, *numpy*, *pandas*, *sqlalchemy* 
 
+``plot_obs_alt_az.py``: *matplotlib*, *numpy*, *pandas*, *sqlalchemy* 
+
 ``stats_opsim_log.py``: *matplotlib*, *numpy*
 
 Scripts
@@ -34,5 +36,7 @@ Scripts
 ``plot_bias.py``: This script plots the observing bias for a simulation. Two plots are given: The Hour Angle distribution and Azimuth vs Altitude.
 
 ``plot_filter_change_info.py``: Plot various quatities associated with filter changes: Changes per Night, Frequency of Changes per Night, Minimum Time Between Filter Changes per Night, Frequency of Minimum Time Between Filter Changes per Night, Number of Filter Changes vs Minimum Time Between Filter Changes.
+
+``plot_obs_alt_az.py``:  Plot Altitude vs Azimuth distributions for both the dome and telescope.
 
 ``stats_opsim_log.py``: This script gathers statistics about the per night processing from the NPZ file create by ``parse_opsim_log.py`` and also plots the Processing Time per Night vs Night.
