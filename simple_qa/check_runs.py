@@ -19,7 +19,12 @@ if __name__ == "__main__":
     run1 = get_data_frame(sys.argv[1])
     run2 = get_data_frame(sys.argv[2])
 
-    comp = run1 == run2
+    try:
+        comp = run1 == run2
+    except ValueError:
+        if len(run1) != len(run2):
+            print("Databases are not the same length.")
+        sys.exit(0)
 
     fieldId = comp.all(0)[1]
     band_filter = comp.all(0)[2]
