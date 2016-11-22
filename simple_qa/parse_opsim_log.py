@@ -36,7 +36,12 @@ with open(infile, "r") as ifile:
             # Want it in hours
             survey_time /= 3600.0
 
-svt = numpy.array([survey_time])
+try:
+    svt = numpy.array([survey_time])
+except NameError:
+    print("Log missing survey runtime.")
+    svt = numpy.array([0])
+
 times = numpy.array(timestamps)
 deltas = times[1:] - times[:-1]
 with open(file_head + ".npz", 'w') as outfile:
