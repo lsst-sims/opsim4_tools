@@ -91,7 +91,7 @@ if __name__ == "__main__":
     ax1.set_ylabel("Number of Filter Changes")
 
     ax2 = fig.add_subplot(2, 3, 2)
-    ax2.hist(filter_changes, bins=numpy.max(filter_changes))
+    ax2.hist(filter_changes, bins=numpy.max(filter_changes), log=args.log)
     ax2.set_xlabel("Number of Filter Changes")
 
     ax3 = fig.add_subplot(2, 3, 3)
@@ -110,10 +110,13 @@ if __name__ == "__main__":
     ax5.set_xlabel("Number of Filter Changes")
     ax5.set_ylabel("Min Time Btw Filter Changes (min)")
 
-    file_head = os.path.basename(args.dbfile).split('.')[0]
-    fig_name = "{}_filter_changes.png".format(file_head)
-
     plt.subplots_adjust(left=0.07, right=0.95, top=0.93, bottom=0.1, hspace=0.2, wspace=0.45)
-    plt.savefig(fig_name)
+
+    file_head = os.path.basename(args.dbfile).split('.')[0]
+    middle_tag = "_filter_changes"
+    if args.log:
+        middle_tag += "_logscale"
+    plt.savefig(file_head + middle_tag + ".png")
+
     if args.interactive:
         plt.show()
