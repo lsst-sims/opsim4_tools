@@ -27,6 +27,8 @@ if __name__ == "__main__":
                         help="Query an OpSim v3 DB.")
     parser.add_argument("-l", dest="log", action="store_true", default=False,
                         help="Set log scale on Alt-Az plots.")
+    parser.add_argument("-n", dest="norm_daz", action="store_true", default=False,
+                        help="Normalize the dome azimuthal angle.")
     parser.set_defaults()
     args = parser.parse_args()
 
@@ -43,6 +45,11 @@ if __name__ == "__main__":
         tel_az = numpy.degrees(run['telAz'].values)
         tel_alt = numpy.degrees(run['telAlt'].values)
 
+    if args.norm_daz:
+        norm_dome_az = dome_az - 360.0 * numpy.floor(dome_az / 360.0)
+    else:
+        norm_dome_az = dome_az
+
     if args.log:
         norm = mc.LogNorm()
     else:
@@ -52,14 +59,14 @@ if __name__ == "__main__":
     fig.suptitle("Observatory Altitude-Azimuth Distributions")
 
     ax1 = fig.add_subplot(1, 2, 1)
-    h1 = ax1.hist2d(dome_az, dome_alt, bins=40, norm=norm)
+    h1 = ax1.hist2d(norm_dome_az, dome_alt, bins=[72, 72], norm=norm)
     ax1.set_title("Dome")
     ax1.set_xlabel("Azimuth (degrees)")
     ax1.set_ylabel("Altitude (degrees)")
     plt.colorbar(h1[3], ax=ax1)
 
     ax2 = fig.add_subplot(1, 2, 2)
-    h2 = ax2.hist2d(tel_az, tel_alt, bins=40, norm=norm)
+    h2 = ax2.hist2d(tel_az, tel_alt, bins=[72, 108], norm=norm)
     ax2.set_title("Telescope")
     ax2.set_xlabel("Azimuth (degrees)")
     ax2.set_ylabel("Altitude (degrees)")
@@ -67,6 +74,8 @@ if __name__ == "__main__":
 
     file_head = os.path.basename(args.dbfile).split('.')[0]
     middle_tag = "_observatory_altaz"
+    if args.norm_daz:
+        middle_tag += "_norm"
     if args.log:
         middle_tag += "_logscale"
     plt.savefig(file_head + middle_tag + ".png")
