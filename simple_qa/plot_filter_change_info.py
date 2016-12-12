@@ -110,7 +110,24 @@ if __name__ == "__main__":
     ax5.set_xlabel("Number of Filter Changes")
     ax5.set_ylabel("Min Time Btw Filter Changes (min)")
 
-    plt.subplots_adjust(left=0.07, right=0.95, top=0.93, bottom=0.1, hspace=0.2, wspace=0.45)
+    ax6 = fig.add_subplot(2, 3, 6)
+    font_size = 12
+    ax6.text(-0.2, 0.75, "Mean Filter Changes Per Night: {:.1f}".format(numpy.mean(filter_changes)),
+             fontsize=font_size)
+    ax6.text(-0.2, 0.65, "Median Filter Changes Per Night: {:.1f}".format(numpy.median(filter_changes)),
+             fontsize=font_size)
+    ax6.text(-0.2, 0.55, "Total Number Filter Changes: {}".format(numpy.sum(filter_changes)),
+             fontsize=font_size)
+    ax6.text(-0.2, 0.45,
+             "Mean Time Btw Filter Changes: {:.2f} min".format(numpy.mean(min_time_btw_filter_changes)),
+             fontsize=font_size)
+    ax6.text(-0.2, 0.35,
+             "Median Time Btw Filter Changes: {:.2f} min".format(numpy.median(min_time_btw_filter_changes)),
+             fontsize=font_size)
+    ax6.set_title("Statistics")
+    plt.setp(plt.gca(), frame_on=False, xticks=(), yticks=())
+
+    plt.subplots_adjust(left=0.07, right=0.95, top=0.93, bottom=0.1, hspace=0.3, wspace=0.45)
 
     file_head = os.path.basename(args.dbfile).split('.')[0]
     middle_tag = "_filter_changes"
