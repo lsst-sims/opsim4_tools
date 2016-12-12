@@ -51,7 +51,7 @@ if __name__ == "__main__":
 
     ax1 = fig.add_subplot(1, 2, 1)
     ax1.hist(hour_angle, bins=100, log=args.log)
-    ax1.set_xlabel("Hour Angle (hours)")
+    ax1.set_xlabel("$\Delta$HA (hours)")
     ax1.axvline(color='red', linewidth=2, linestyle='--')
 
     ax2 = fig.add_subplot(1, 2, 2)
