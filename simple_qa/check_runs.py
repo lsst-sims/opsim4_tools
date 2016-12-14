@@ -24,7 +24,10 @@ if __name__ == "__main__":
     except ValueError:
         if len(run1) != len(run2):
             print("Databases are not the same length.")
-        sys.exit(0)
+            if len(run1) > len(run2):
+                comp = run1[:len(run2)] == run2
+            else:
+                comp = run1 == run2[:len(run1)]
 
     fieldId = comp.all(0)[1]
     band_filter = comp.all(0)[2]
