@@ -1,4 +1,5 @@
 import argparse
+import matplotlib.colors as mc
 import matplotlib.pyplot as plt
 import numpy
 import pandas as pd
@@ -46,6 +47,11 @@ if __name__ == "__main__":
     hour_angle = numpy.where(hour_angle > 180.0, hour_angle - 360.0, hour_angle)
     hour_angle /= 15.0
 
+    if args.log:
+        norm = mc.LogNorm()
+    else:
+        norm = None
+
     fig = plt.figure(figsize=(12, 5))
     fig.suptitle("Observing Bias")
 
@@ -55,7 +61,7 @@ if __name__ == "__main__":
     ax1.axvline(color='red', linewidth=2, linestyle='--')
 
     ax2 = fig.add_subplot(1, 2, 2)
-    h2 = ax2.hist2d(azimuth, altitude, bins=40)
+    h2 = ax2.hist2d(azimuth, altitude, bins=40, norm=norm)
     ax2.set_xlabel("Azimuth (degrees)")
     ax2.set_ylabel("Altitude (degrees)")
     plt.colorbar(h2[3], ax=ax2)
