@@ -33,11 +33,12 @@ def get_nes(fd, fs):
     ra, dec = fd.get_ra_dec_arrays(query)
     return ("NorthEclipticSpur", ra, dec)
 
-def get_dd(fd, fs):
-    user_regions = ((0.01, -45.5), (34.39, -5.1), (53.0, -27.34), (150.0, 2.84), (349.4, -63.3))
-    ra = [x[0] for x in user_regions]
-    dec = [x[1] for x in user_regions]
-    return ("DDCosmology", np.array(ra), np.array(dec))
+def get_ddc1(fd, fs):
+    user_regions = (290, 744, 1427, 2412, 2786)
+    query1 = fs.select_user_regions(user_regions)
+    query = fs.combine_queries((), query1)
+    ra, dec = fd.get_ra_dec_arrays(query)
+    return ("DDCosmology1", ra, dec)
 
 def get_eb15(fd, fs):
     # Full band
@@ -91,7 +92,7 @@ if __name__ == "__main__":
     proposal_funcs.append(get_wfd)
     proposal_funcs.append(get_scp)
     proposal_funcs.append(get_nes)
-    proposal_funcs.append(get_dd)
+    proposal_funcs.append(get_ddc1)
     # proposal_funcs.append(get_eb15)
     # proposal_funcs.append(get_eb12)
     # proposal_funcs.append(get_eb10)
