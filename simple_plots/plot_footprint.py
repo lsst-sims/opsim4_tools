@@ -82,6 +82,9 @@ if __name__ == "__main__":
     parser.add_argument("--ra-center", dest="ra_center", type=float,
                         default=0.0,
                         help="Set the RA (degrees) center of the plot.")
+    parser.add_argument("--save-fig", dest="save_fig", action="store_true",
+                        default=False,
+                        help="Save the figure instead of showing it.")
 
     parser.set_defaults()
     args = parser.parse_args()
@@ -109,4 +112,4 @@ if __name__ == "__main__":
         field_dec[name] = dec
 
     # Check their locations on a plot.
-    plot_fields(field_ra, field_dec, np.radians(args.ra_center))
+    plot_fields(field_ra, field_dec, args)

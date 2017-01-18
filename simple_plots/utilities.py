@@ -5,7 +5,8 @@ from matplotlib.patches import Ellipse
 import lsst.sims.maf.slicers as slicers
 import lsst.sims.maf.plots as plots
 
-def plot_fields(field_ra, field_dec, ra_center):
+def plot_fields(field_ra, field_dec, options):
+    ra_center = np.radians(options.ra_center)
     slicer = slicers.OpsimFieldSlicer()
     fignum = None
     colorlist = [[1, 0, 0], [1, 1, 0], [0, 1, 0], [0, .25, .5],
@@ -30,7 +31,7 @@ def plot_fields(field_ra, field_dec, ra_center):
         fignum = skymap(fieldLocs, slicer,
                         {'metricIsColor': True, 'bgcolor': 'lightgray', 'raCen': ra_center},
                         fignum=fignum)
-    plt.figure(fignum)
+
     labelcolors = []
     labeltext = []
     for prop in field_ra:
@@ -40,4 +41,8 @@ def plot_fields(field_ra, field_dec, ra_center):
         labelcolors.append(el)
         labeltext.append(prop.rstrip('.conf'))
     plt.legend(labelcolors, labeltext, loc=(0.85, 0.9), fontsize='smaller')
-    plt.show()
+    if not options.save_fig:
+        plt.show()
+    else:
+        print("Saving figure")
+        plt.savefig('LSST_Proposal_Sky_Coverage.png', dpi=500)
