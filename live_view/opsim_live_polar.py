@@ -37,10 +37,13 @@ def normalize_color(color):
     return color
 
 def axisSetup(ax, bgcolor=TWILIGHT_COLOR):
-    ax.set_axis_bgcolor(bgcolor)
+    try:
+        ax.set_facecolor(bgcolor)
+    except AttributeError:
+        ax.set_axis_bgcolor(bgcolor)
     ax.set_rgrids([0.3333, 0.66666], [u"60\u00b0", u"30\u00b0"], color='w')
     ax.set_theta_zero_location("N")
-    ax.grid(True, color='w', linewidth=2)
+    ax.grid(True, color='w', linewidth=1)
 
 def run(opts):
     manager = SALPY_scheduler.SAL_scheduler()
@@ -53,6 +56,7 @@ def run(opts):
     plt.ion()
 
     fig, ax1 = plt.subplots(subplot_kw={"projection": PROJECTION})
+    fig.set_facecolor((0.75, 0.75, 0.75))
     axisSetup(ax1)
 
     for i, (band_filter, filter_color) in enumerate(FILTER_DICT.items()):
