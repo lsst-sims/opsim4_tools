@@ -12,7 +12,7 @@ Requirements
 
 ``find_bad_row.py``: *numpy*
 
-``get_observations_over_time.py``: *numpy*, *pandas*, *sqlalchemy*
+``get_observations_over_time_comp.py``: *numpy*, *pandas*, *sqlalchemy*
 
 ``parse_opsim_log.py``: *numpy* 
 
@@ -45,6 +45,6 @@ Scripts
 
 ``plot_obs_alt_az.py``:  Plot Altitude vs Azimuth distributions for both the dome and telescope.
 
-``plot_observations_over_time.py``: This script plots the distributions of observations over nights for the standard five proposals for an OpSim3 and OpSim4 run.
+``plot_observations_over_time_comp.py``: This script plots the distributions of observations over nights for the standard five proposals for an OpSim3 and OpSim4 run.
 
 ``stats_opsim_log.py``: This script gathers statistics about the per night processing from the NPZ file create by ``parse_opsim_log.py`` and also plots the Processing Time per Night vs Night.
