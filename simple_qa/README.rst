@@ -12,7 +12,7 @@ Requirements
 
 ``find_bad_row.py``: *numpy*
 
-``get_observations_over_time_comp.py``: *numpy*, *pandas*, *sqlalchemy*
+``get_observations_over_time.py``: *numpy*, *pandas*, *sqlalchemy*
 
 ``parse_opsim_log.py``: *numpy* 
 
@@ -22,7 +22,7 @@ Requirements
 
 ``plot_obs_alt_az.py``: *matplotlib*, *numpy*, *pandas*, *sqlalchemy* 
 
-``plot_observations_over_time.py``: *matplotlib*, *numpy*
+``plot_observations_over_time_comp.py``: *matplotlib*, *numpy*
 
 ``plot_observations_over_time_single.py``: *matplotlib*, *numpy*, *pandas*, *sqlalchemy*
 
