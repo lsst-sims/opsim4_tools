@@ -24,6 +24,8 @@ Requirements
 
 ``plot_observations_over_time.py``: *matplotlib*, *numpy*
 
+``plot_observations_over_time_single.py``: *matplotlib*, *numpy*, *pandas*, *sqlalchemy*
+
 ``stats_opsim_log.py``: *matplotlib*, *numpy*
 
 Scripts
@@ -37,6 +39,8 @@ Scripts
 
 ``get_observations_over_time.py``: This script as a SQLite database from either OpSim3 (requires flag) or Opsim4 and gathers the information for all observations over all nights in the standard five proposals.
 
+``get_observations_over_time.py``: This script as a SQLite database from either OpSim3 (requires flag) or Opsim4 and gathers the information for all observations over all nights in the standard five proposals.
+
 ``parse_opsim_log.py``: This script parses an *OpSim4* output log to create a NPZ file containing the processing time per night as well as the total simulation running time.
 
 ``plot_bias.py``: This script plots the observing bias for a simulation. Two plots are given: The Hour Angle distribution and Azimuth vs Altitude.
@@ -46,5 +50,7 @@ Scripts
 ``plot_obs_alt_az.py``:  Plot Altitude vs Azimuth distributions for both the dome and telescope.
 
 ``plot_observations_over_time_comp.py``: This script plots the distributions of observations over nights for the standard five proposals for an OpSim3 and OpSim4 run.
+
+``plot_observations_over_time_single.py``: This script plots the distributions of observations over nights for all proposals in an OpSim4 run.
 
 ``stats_opsim_log.py``: This script gathers statistics about the per night processing from the NPZ file create by ``parse_opsim_log.py`` and also plots the Processing Time per Night vs Night.
