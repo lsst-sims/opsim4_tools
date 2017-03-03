@@ -1,11 +1,12 @@
 import argparse
 import matplotlib.pyplot as plt
 import numpy
+import os
 
-scale_factors = [1.8, 1.5, 1.1, 1.1, 1.6]
+scale_factors = [1.5, 1.3, 1.1, 1.1, 1.6]
 
 def get_run_id(run_filename):
-    return '_'.join(run_filename.split('_')[:2])
+    return '_'.join(os.path.basename(run_filename).split('_')[:2])
 
 if __name__ == "__main__":
     description = ["Python script to plot observations over time for a given proposal."]
