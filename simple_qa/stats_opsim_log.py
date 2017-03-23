@@ -52,5 +52,21 @@ if __name__ == '__main__':
 
     plt.subplots_adjust(left=0.08, right=1.00, wspace=0.0)
     plt.savefig(file_head + "_runtime_per_night.png")
+
+    try:
+        suggest_targets_times = ifile["suggest_targets_times"]
+        observe_target_times = ifile["observe_target_times"]
+
+        try:
+            print("")
+            print("Suggest Targets Mean: {:.3f} seconds".format(numpy.mean(suggest_targets_times)))
+            print("Suggest Targets Maximum: {:.2f} seconds".format(numpy.amax(suggest_targets_times)))
+            print("Observe Target Mean: {:.3f} seconds".format(numpy.mean(observe_target_times)))
+            print("Observe Target Maximum: {:.2f} seconds".format(numpy.amax(observe_target_times)))
+        except ValueError:
+            pass
+    except KeyError:
+        pass
+
     if args.interactive:
         plt.show()
