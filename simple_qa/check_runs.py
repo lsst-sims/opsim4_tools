@@ -47,9 +47,15 @@ def check_order(db1, db2, table_name):
                 bad_column = ~comp[column_name]
                 print("Out-of-order {}:".format(column_name))
                 print(os.path.basename(db1))
-                print(run1[column_name][bad_column])
+                if table_name == "Config":
+                    r1 = run1
+                    r2 = run2
+                else:
+                    r1 = run1[column_name]
+                    r2 = run2[column_name]
+                print(r1[bad_column])
                 print(os.path.basename(db2))
-                print(run2[column_name][bad_column])
+                print(r2[bad_column])
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
