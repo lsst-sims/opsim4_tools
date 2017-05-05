@@ -23,7 +23,7 @@ def check_order(db1, db2, table_name):
         comp = run1 == run2
     except ValueError:
         if len(run1) != len(run2):
-            print("Databases are not the same length.")
+            print("Databases are not the same length: {}, {}.".format(len(run1), len(run2)))
             if len(run1) > len(run2):
                 comp = run1[:len(run2)] == run2
             else:
@@ -47,9 +47,9 @@ def check_order(db1, db2, table_name):
                 bad_column = ~comp[column_name]
                 print("Out-of-order {}:".format(column_name))
                 print(os.path.basename(db1))
-                print(run1[bad_column])
+                print(run1[column_name][bad_column])
                 print(os.path.basename(db2))
-                print(run2[bad_column])
+                print(run2[column_name][bad_column])
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
