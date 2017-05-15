@@ -5,6 +5,9 @@ set -e
 export OPENSPLICE_LOC=
 # Set install location of Scheduler DDS topic library
 export SCHEDULER_TOPIC_LIB=
+# Uncomment and set the directory for the sky brightness
+# data if not installed along side the code.
+#export SIMS_SKYBRIGHTNESS_DATA=
 
 # Set a unique DDS domain name via hostname
 if [ -n "${OPSIM_HOSTNAME}" ] ; then
