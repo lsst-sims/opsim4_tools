@@ -1,0 +1,27 @@
+#!/bin/bash
+set -e
+
+# Set install location of ts_opensplice repository
+export OPENSPLICE_LOC=
+# Set install location of Scheduler DDS topic library
+export SCHEDULER_TOPIC_LIB=
+# Uncomment and set the directory for the sky brightness
+# data if not installed along side the code.
+#export SIMS_SKYBRIGHTNESS_DATA=
+
+# Set a unique DDS domain name via hostname
+if [ -n "${OPSIM_HOSTNAME}" ] ; then
+	name=${OPSIM_HOSTNAME%%.*}
+else
+	name=${HOSTNAME%%.*}
+fi
+
+export LSST_DDS_DOMAIN=OPSIM_$(echo ${name} | tr [a-z] [A-Z])
+
+export OSPL_HOME=${OPENSPLICE_LOC}/ts_opensplice/OpenSpliceDDS/V6.4.1/HDE/x86_64.linux
+export OSPL_URI=file://${OSPL_HOME}/etc/config/ospl.xml
+
+export LD_LIBRARY_PATH=${OSPL_HOME}/lib:${SCHEDULER_TOPIC_LIB}:${LD_LIBRARY_PATH}
+export PYTHONPATH=${SCHEDULER_TOPIC_LIB}:${PYTHONPATH}
+
+$@
