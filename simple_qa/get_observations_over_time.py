@@ -38,8 +38,6 @@ if __name__ == "__main__":
 
     props = ["GP", "SCP", "NES", "WFD", "DD"]
     output_arrays = {}
-    if not args.v3:
-        del props[-1]
     engine = create_engine("sqlite:///{}".format(args.dbfile))
 
     if args.v3:
