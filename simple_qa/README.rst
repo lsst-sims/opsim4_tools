@@ -10,6 +10,8 @@ Requirements
 
 ``check_skybrightness.py``: SOCS (*sims_ocs*), Scheduler (*ts_scheduler*), SkyModel (*sky_brightness*), *sims_utils*, *numpy* and all of their dependencies
 
+``deepdrilling_sequences.py``: *numpy*, *pandas*, *sqlalchemy*
+
 ``find_bad_row.py``: *numpy*
 
 ``get_observations_over_time.py``: *numpy*, *pandas*, *sqlalchemy*
@@ -34,6 +36,8 @@ Scripts
 ``check_runs.py``: This script checks the ordering of the TargetHistory, ObsHistory, SlewHistory and SlewFinalState tables between two OpSim SQLite databases.
 
 ``check_skybrightness.py``: This script takes an *OpSim4* results database and compares the sky brightness found in the target history against the sky brightness calculated by the SkyModel class at the same MJD.
+
+``deepdrilling_sequences.py``: This script takes an *OpSim4* results database and looks at a Deep Drilling proposal to evaluate the completion of sequences. The proposal Id number is required to make the script function.
 
 ``find_bad_row.py``: When *OpSim4* fails on a database write, usually for a nan, a compressed NumPy file is generated for the information that failed the insertion. This script reads that file and returns the column(s) associated with the bad row. The column with the bad value is excluded.
 
