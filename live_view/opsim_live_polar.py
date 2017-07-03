@@ -12,6 +12,8 @@ import sys
 PROJECTION = "polar"
 NUM_FIELDS = 10
 
+CANVAS_BACKGROUND_COLOR = (0.75, 0.75, 0.75)
+
 LSST_FOV_RADIUS = math.radians(1.75)
 LSST_FOV = LSST_FOV_RADIUS * 2.0
 MOON_SCALE = 6.0
@@ -56,7 +58,7 @@ def run(opts):
     plt.ion()
 
     fig, ax1 = plt.subplots(subplot_kw={"projection": PROJECTION})
-    fig.set_facecolor((0.75, 0.75, 0.75))
+    fig.set_facecolor(CANVAS_BACKGROUND_COLOR)
     axisSetup(ax1)
 
     for i, (band_filter, filter_color) in enumerate(FILTER_DICT.items()):
@@ -112,9 +114,9 @@ def run(opts):
                 plt.text(0.9, 0.0, tom_text, transform=ax1.transAxes)
                 plt.draw()
                 if opts.save is not None:
-                    filename = "mjd_{:12.0f}.png".format(obs.observation_start_mjd * 1e13)
+                    filename = "mjd_{:15.0f}.png".format(obs.observation_start_mjd * 1e10)
                     filepath = os.path.join(opts.save, filename)
-                    plt.savefig(filepath)
+                    plt.savefig(filepath, facecolor=CANVAS_BACKGROUND_COLOR)
                 plt.pause(0.0001)
 
                 field_list[-1].set_alpha(ALPHA)
